@@ -27,15 +27,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * Import a module by `require()`ing it. If that results in
@@ -55,25 +46,16 @@ function requireModule(modulePath, exportName) {
  * everything in an `async` IIFE to make our lives a little easier.
  */
 ;
-(function () {
-    return __awaiter(this, void 0, void 0, function* () {
-        yield new Promise((resolve) => {
-            console.log('Waiting... for 2s');
-            setTimeout(() => {
-                console.log('Done waiting.');
-                resolve(undefined);
-            }, 2000);
-        });
-        console.log({
-            title: 'Importing into a CommonJS module',
-            // CJS<-CJS and MJS<-CJS are equivalent
-            defaultCjsExport: requireModule('./exporter.cjs'),
-            namedCjsExport: requireModule('./exporter.cjs', 'namedCjsExport'),
-            // Cannot `require` an ESM module
-            defaultMjsExportUsingRequire: requireModule('./exporter.mjs'),
-            namedMjsExportUsingRequire: requireModule('./exporter.mjs', 'namedMjsExport'),
-            defaultMjsExport: (yield Promise.resolve().then(() => __importStar(require('./exporter.mjs')))).default,
-            namedMjsExport: (yield Promise.resolve().then(() => __importStar(require('./exporter.mjs')))).namedMjsExport,
-        });
+(async function () {
+    console.log({
+        title: 'Importing into a CommonJS module',
+        // CJS<-CJS and MJS<-CJS are equivalent
+        defaultCjsExport: requireModule('./exporter.cjs'),
+        namedCjsExport: requireModule('./exporter.cjs', 'namedCjsExport'),
+        // Cannot `require` an ESM module
+        defaultMjsExportUsingRequire: requireModule('./exporter.mjs'),
+        namedMjsExportUsingRequire: requireModule('./exporter.mjs', 'namedMjsExport'),
+        defaultMjsExport: (await Promise.resolve().then(() => __importStar(require('./exporter.mjs')))).default,
+        namedMjsExport: (await Promise.resolve().then(() => __importStar(require('./exporter.mjs')))).namedMjsExport,
     });
 })();

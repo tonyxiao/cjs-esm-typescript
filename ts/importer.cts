@@ -22,14 +22,6 @@ function requireModule(modulePath: string, exportName?: string) {
  * everything in an `async` IIFE to make our lives a little easier.
  */
 ;(async function () {
-  await new Promise((resolve) => {
-    console.log('Waiting... for 2s')
-    setTimeout(() => {
-      console.log('Done waiting.')
-      resolve(undefined)
-    }, 2000)
-  })
-
   console.log({
     title: 'Importing into a CommonJS module',
 
