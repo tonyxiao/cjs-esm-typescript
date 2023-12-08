@@ -9,34 +9,42 @@
  * an error, return the error code.
  */
 function requireModule(modulePath, exportName) {
-	try {
-		const imported = require(modulePath);
-		return exportName ? imported[exportName] : imported;
-	} catch (err) {
-		return err.code;
-	}
+  try {
+    const imported = require(modulePath)
+    return exportName ? imported[exportName] : imported
+  } catch (err) {
+    return err.code
+  }
 }
 
 /**
  * CommonJS does not have top-level `await`, so we can wrap
  * everything in an `async` IIFE to make our lives a little easier.
  */
-(async function () {
-	console.log({
-		title: 'Importing into a CommonJS module',
+;(async function () {
+  await new Promise((resolve) => {
+    console.log('Waiting... for 2s')
+    setTimeout(() => {
+      console.log('Done waiting.')
+      resolve()
+    }, 2000)
+  })
 
-		// CJS<-CJS and MJS<-CJS are equivalent
-		defaultCjsExport: requireModule('./exporter.cjs'),
-		namedCjsExport: requireModule('./exporter.cjs', 'namedCjsExport'),
+  console.log({
+    title: 'Importing into a CommonJS module',
 
-		// Cannot `require` an ESM module
-		defaultMjsExportUsingRequire: requireModule('./exporter.mjs'),
-		namedMjsExportUsingRequire: requireModule(
-			'./exporter.mjs',
-			'namedMjsExport',
-		),
+    // CJS<-CJS and MJS<-CJS are equivalent
+    defaultCjsExport: requireModule('./exporter.cjs'),
+    namedCjsExport: requireModule('./exporter.cjs', 'namedCjsExport'),
 
-		defaultMjsExport: (await import('./exporter.mjs')).default,
-		namedMjsExport: (await import('./exporter.mjs')).namedMjsExport,
-	});
-})();
+    // Cannot `require` an ESM module
+    defaultMjsExportUsingRequire: requireModule('./exporter.mjs'),
+    namedMjsExportUsingRequire: requireModule(
+      './exporter.mjs',
+      'namedMjsExport',
+    ),
+
+    defaultMjsExport: (await import('./exporter.mjs')).default,
+    namedMjsExport: (await import('./exporter.mjs')).namedMjsExport,
+  })
+})()
